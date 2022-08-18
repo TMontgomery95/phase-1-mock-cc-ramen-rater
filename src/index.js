@@ -1,40 +1,40 @@
-// write your code here
-const getRamenData = 
-    fetch('http://localhost:3000/ramens')
-    .then(resp => resp.json())
-    .then(ramenData => ramenData.forEach(ramen => {
-        createRamenImage(ramen)
-    }));
-        
-const imgUrl = 'http://localhost:3000/ramens'
+// core deliverable 1
+const ramenMenu = document.querySelector('#ramen-menu');
 
-function createRamenImage (imgUrl) {
-    let container = document.querySelector('#ramen-menu');
-    let ramenImg = document.createElement('img');
-    ramenImg.src = imgUrl.image;
+// fetch GET request 
+fetch('http://localhost:3000/ramens')
+    .then(response => response.json())
+    .then(data => displayRamens(data))
 
-    container.appendChild(ramenImg);
+function displayRamens(ramens){
+    ramens.forEach(ramen => {
+        displayRamen(ramen);
+    });
+}
+// core deliverables 1 and 2 met at this point
+const newRamenForm = document.querySelector('#new-ramen');
 
-    ramenImg.addEventListener('click', (e) => {
-        grabRamen(e.target.id);
+newRamenForm.addEventListener('submit', (e) =>{
+    e.preventDefault();
+    const newRamenObj = {}
+    newRamenObj.name = document.getElementById('new-name').value
+    newRamenObj.restaurant = document.getElementById('new-restaurant').value
+    newRamenObj.image = document.getElementById('new-image').value
+    newRamenObj.rating = document.getElementById('new-rating').value
+    newRamenObj.comment = document.getElementById('new-comment').value
+    displayRamen(newRamenObj)
+});
+
+function displayRamen(ramen) {
+    const createImg = document.createElement('img');
+    createImg.src = ramen.image;
+    ramenMenu.appendChild(createImg);
+
+    createImg.addEventListener('click', () => {
+        document.querySelector('.detail-image').src = ramen.image;
+        document.querySelector('.name').textContent = ramen.name;
+        document.querySelector('.restaurant').textContent = ramen.restaurant;
+        document.querySelector('#rating-display').textContent = ramen.rating;
+        document.querySelector('#comment-display').textContent = ramen.comment;
     })
-}
-
-function grabRamen(ramenId) {
-    fetch('http://localhost:3000/ramens')
-        .then(resp => resp.json)
-        .then(ramen => {
-            renderRamenDetails(ramen)
-        })
-}
-
-function renderRamenDetails(ramenData) {
-    const img = document.querySelector('.detail-image');
-    const h2 = document.querySelector('.name');
-    const h3 = document.querySelector('.restaurant');
-    const ramenRating = document.querySelector('#rating-display');
-    img.src = ramenData.image;
-    h2.textContent = ramenData.name;
-    h3.textContent = ramenData.restaurant;
-    ramenRating.textContent = ramenData.rating;
 }
